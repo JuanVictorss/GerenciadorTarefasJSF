@@ -1,6 +1,5 @@
 package br.com.esig.repository;
 
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import br.com.esig.model.Responsavel;
 import br.com.esig.model.Tarefa;
 
 public class GerarEsquemaTest {
@@ -17,62 +17,67 @@ public class GerarEsquemaTest {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("Esig");
         EntityManager em = emf.createEntityManager();
 
-        Scanner scanner = new Scanner(System.in); // Scanner para ler a entrada do usuário
+        Scanner scanner = new Scanner(System.in);
 
         try {
-            // Adicionar duas tarefas: uma de desenvolvimento e outra de compras
             em.getTransaction().begin();
 
-            Tarefa tarefaDev = new Tarefa("Desenvolver API", "Criar API para integração com sistema X", 
-                    "Maria", "ALTA", java.time.LocalDate.of(2025, 03, 01), true);
-            Tarefa tarefaCompras = new Tarefa("Comprar equipamentos", "Comprar laptop e acessórios para equipe de desenvolvimento", 
-                    "João", "MÉDIA", java.time.LocalDate.of(2025, 02, 20), false);
+            TypedQuery<Responsavel> query = em.createQuery("SELECT r FROM Responsavel r", Responsavel.class);
+            List<Responsavel> responsaveis = query.getResultList();
+            
+            if (responsaveis.isEmpty()) {
+                Responsavel responsavelPadrao = new Responsavel();
+                responsavelPadrao.setResponsavel("Maria");
+                em.persist(responsavelPadrao);
+                responsaveis.add(responsavelPadrao);
+            }
 
-            // Persistir as tarefas
+            Responsavel responsavelDev = responsaveis.get(0);
+            Responsavel responsavelCompras = responsaveis.size() > 1 ? responsaveis.get(1) : responsavelDev; 
+
+            Tarefa tarefaDev = new Tarefa("Desenvolver API", "Criar API para integração com sistema X", 
+                    responsavelDev, "ALTA", java.time.LocalDate.of(2025, 03, 01), true);
+            Tarefa tarefaCompras = new Tarefa("Comprar equipamentos", "Comprar laptop e acessórios para equipe de desenvolvimento", 
+                    responsavelCompras, "MÉDIA", java.time.LocalDate.of(2025, 02, 20), false);
+
             em.persist(tarefaDev);
             em.persist(tarefaCompras);
 
             em.getTransaction().commit();
             System.out.println("✅ Tarefas adicionadas.");
 
-            // Listar todas as tarefas
             System.out.println("Tarefas no banco de dados:");
             listarTarefas(em);
             
             System.out.println("Pressione Enter para editar a tarefa de desenvolvimento...");
-            scanner.nextLine(); // Esperar o usuário apertar Enter
+            scanner.nextLine(); 
 
-            // Editar a tarefa de compras (aumentar a descrição e diminuir a prioridade)
             editarTarefa(em, tarefaCompras.getNumero(), 
                 "Comprar equipamentos", 
                 "Comprar laptop, monitores, cadeiras ergonômicas e acessórios para equipe de desenvolvimento, incluindo software de licenciamento.",
-                "João", "BAIXA", java.time.LocalDate.of(2025, 02, 20), false);
+                responsavelCompras, "BAIXA", java.time.LocalDate.of(2025, 02, 20), false);
 
-            // Listar novamente as tarefas após edição
             System.out.println("Tarefas no banco de dados após edição:");
             listarTarefas(em);
 
-            // Pedir para o usuário pressionar Enter antes de deletar a tarefa de dev
             System.out.println("Pressione Enter para deletar a tarefa de desenvolvimento...");
-            scanner.nextLine(); // Esperar o usuário apertar Enter
+            scanner.nextLine(); 
 
-            // Deletar a tarefa de desenvolvimento após pressionar Enter
             em.getTransaction().begin();
             em.remove(tarefaDev);
             em.getTransaction().commit();
-            System.out.println("🗑️ Tarefa de desenvolvimento deletada: " + tarefaDev);
+            System.out.println("Tarefa de desenvolvimento deletada: " + tarefaDev);
 
-            // Listar novamente as tarefas após remoção
             System.out.println("Tarefas no banco de dados após remoção:");
             listarTarefas(em);
 
         } catch (Exception e) {
             em.getTransaction().rollback();
-            System.err.println("❌ Erro: " + e.getMessage());
+            System.err.println("Erro: " + e.getMessage());
         } finally {
             em.close();
             emf.close();
-            scanner.close(); // Fechar o scanner
+            scanner.close();
         }
     }
 
@@ -83,35 +88,29 @@ public class GerarEsquemaTest {
         tarefas.forEach(t -> System.out.println(t));
     }
 
-    // Função para editar uma tarefa
     private static void editarTarefa(EntityManager em, Long numeroTarefa, String novoTitulo, 
-        String novaDescricao, String novoResponsavel, String novaPrioridade, 
+        String novaDescricao, Responsavel novoResponsavel, String novaPrioridade, 
         java.time.LocalDate novaDeadline, boolean novoConcluido) {
         
-        // Buscar a tarefa pelo numero
         Tarefa tarefa = em.find(Tarefa.class, numeroTarefa);
         
         if (tarefa != null) {
-            // Iniciar transação
             em.getTransaction().begin();
             
-            // Atualizar todos os campos da tarefa
             tarefa.setTitulo(novoTitulo);
             tarefa.setDescricao(novaDescricao);
-            tarefa.setResponsavel(novoResponsavel);
+            tarefa.setResponsavel(novoResponsavel);  
             tarefa.setPrioridade(novaPrioridade);
             tarefa.setDeadline(novaDeadline);
             tarefa.setConcluido(novoConcluido);
             
-            // Salvar as alterações
             em.merge(tarefa);
             
-            // Confirmar a transação
             em.getTransaction().commit();
             
-            System.out.println("✅ Tarefa editada com sucesso: " + tarefa);
+            System.out.println("Tarefa editada com sucesso: " + tarefa);
         } else {
-            System.out.println("❌ Tarefa não encontrada com o número: " + numeroTarefa);
+            System.out.println(" Tarefa não encontrada com o número: " + numeroTarefa);
         }
     }
 }

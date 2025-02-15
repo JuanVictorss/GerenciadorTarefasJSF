@@ -9,10 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "esig")
+@Table(name = "tarefa")
 public class Tarefa implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -27,8 +29,9 @@ public class Tarefa implements Serializable {
 	@Column(name = "descricao_tarefa", nullable = false, length = 500)
 	private String descricao;
 	
-	@Column(name = "responsavel_tarefa", nullable = false)
-	private String responsavel;
+    @ManyToOne 
+    @JoinColumn(name = "responsavel_nome", referencedColumnName = "responsavel_tarefa")
+    private Responsavel responsavel;
 	
 	@Column(name = "prioridade_tarefa", nullable = false)
 	private String prioridade;
@@ -42,7 +45,7 @@ public class Tarefa implements Serializable {
 	
 	public Tarefa() {
 	}
-	public Tarefa(String titulo, String descricao, String responsavel, String prioridade, LocalDate deadline, boolean concluido) {
+	public Tarefa(String titulo, String descricao, Responsavel responsavel, String prioridade, LocalDate deadline, boolean concluido) {
 		this.titulo = titulo;
 		this.descricao = descricao;
 		this.responsavel = responsavel;
@@ -59,8 +62,8 @@ public class Tarefa implements Serializable {
 	public String getDescricao() {return descricao;}
 	public void setDescricao(String descricao) {this.descricao = descricao;}
 	
-	public String getResponsavel() {return responsavel;}
-	public void setResponsavel(String responsavel) {this.responsavel = responsavel;}
+	public Responsavel getResponsavel() {return responsavel;}
+	public void setResponsavel(Responsavel responsavel) {this.responsavel = responsavel;}
 	
 	public String getPrioridade() {return prioridade;}
 	public void setPrioridade(String prioridade) {this.prioridade = prioridade;}

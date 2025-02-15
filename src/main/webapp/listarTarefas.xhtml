@@ -11,7 +11,6 @@
     <h:form>
         <h1>Listagem de Tarefas</h1>
 
-        <!-- Filtros -->
         <h:panelGrid columns="2">
             <h:outputLabel for="numero" value="Número:" />
             <h:inputText id="numero" value="#{tarefaBean.numero}" />
@@ -38,7 +37,7 @@
 
         <br /><br />
 
-        <!-- Tabela de Tarefas -->
+
         <h:dataTable value="#{tarefaBean.tarefas}" var="tarefa" border="1">
             <h:column>
                 <f:facet name="header">Número</f:facet>

@@ -12,24 +12,24 @@
 		<h:form>
 			<h:panelGrid columns="2">
 				<h:outputLabel for="titulo" value="Título:" />
-				<h:inputText id="titulo" value="#{tarefaBean.titulo}"
+				<h:inputText id="titulo" value="#{tarefaBean.tarefa.titulo}"
 					required="true" />
 
 				<h:outputLabel for="descricao" value="Descrição:" />
-				<h:inputText id="descricao" value="#{tarefaBean.descricao}"
+				<h:inputText id="descricao" value="#{tarefaBean.tarefa.descricao}"
 					required="true" />
-
+					
 				<h:outputLabel for="responsavel" value="Responsável:" />
-				<h:selectOneMenu id="responsavel" value="#{tarefaBean.responsavel}"
-					required="true">
+				<h:selectOneMenu id="responsavel"
+					value="#{responsavelBean.responsavel}" required="true">
 					<f:selectItem itemLabel="Select" noSelectionOption="true" />
-					<f:selectItems value="#{tarefaBean.responsaveis}" var="r"
-						itemLabel="#{r.nome}" itemValue="#{r.id}" />
+					<f:selectItems value="#{responsavelBean.responsaveis}" var="r"
+						itemLabel="#{r.responsavel}" itemValue="#{r}" />
 				</h:selectOneMenu>
 
 				<h:outputLabel for="prioridade" value="Prioridade:" />
-				<h:selectOneMenu id="prioridade" value="#{tarefaBean.prioridade}"
-					required="true">
+				<h:selectOneMenu id="prioridade"
+					value="#{tarefaBean.tarefa.prioridade}" required="true">
 					<f:selectItem itemLabel="Select" noSelectionOption="true" />
 					<f:selectItem itemLabel="Baixa" itemValue="Baixa" />
 					<f:selectItem itemLabel="Média" itemValue="Média" />
@@ -37,12 +37,12 @@
 				</h:selectOneMenu>
 
 				<h:outputLabel for="deadline" value="Deadline:" />
-				<h:inputText id="deadline" value="#{tarefaBean.deadline}"
+				<h:inputText id="deadline" value="#{tarefaBean.tarefa.deadline}"
 					required="true">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:inputText>
 				<h:outputLabel />
-				<h:commandButton value="Cadastrar" action="#{tarefaBean.cadastrar}" />
+				<h:commandButton value="Cadastrar" />
 			</h:panelGrid>
 		</h:form>
 	</div>

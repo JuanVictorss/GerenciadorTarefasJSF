@@ -10,19 +10,15 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/esig"/>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.persistence.jdbc.password" value="130924"/>
-
-				
 			
       		<property name="javax.persistence.schema-generation.create-source" value="metadata" />
 			<property name="javax.persistence.schema-generation.database.action" value="update"/>
+			
       		<property name="javax.persistence.sql-load-script-source" value="META-INF/sql/dados-iniciais.sql"/>
 			
-			<property name="javax.persistence.schema-generation.create-source" value="metadata"/>
-      		
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
-
-			
+	
 		</properties>
 	</persistence-unit>
 </persistence>
