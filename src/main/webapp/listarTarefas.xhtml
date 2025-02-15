@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Listagem de Tarefas</title>
+</h:head>
+<h:body>
+    <h:form>
+        <h1>Listagem de Tarefas</h1>
+
+        <!-- Filtros -->
+        <h:panelGrid columns="2">
+            <h:outputLabel for="numero" value="Número:" />
+            <h:inputText id="numero" value="#{tarefaBean.numero}" />
+
+            <h:outputLabel for="tituloDescricao" value="Título/Descrição:" />
+            <h:inputText id="tituloDescricao" value="#{tarefaBean.tituloDescricao}" />
+
+            <h:outputLabel for="responsavel" value="Responsável:" />
+            <h:selectOneMenu id="responsavel" value="#{tarefaBean.responsavel}">
+                <f:selectItem itemLabel="Select" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{tarefaBean.responsaveis}" var="r" itemLabel="#{r.nome}" itemValue="#{r.id}" />
+            </h:selectOneMenu>
+
+            <h:outputLabel for="situacao" value="Situação:" />
+            <h:selectOneMenu id="situacao" value="#{tarefaBean.situacao}">
+                <f:selectItem itemLabel="Select" itemValue="" noSelectionOption="true" />
+                <f:selectItem itemLabel="Em andamento" itemValue="Em andamento" />
+                <f:selectItem itemLabel="Concluído" itemValue="Concluído" />
+                <f:selectItem itemLabel="Pendente" itemValue="Pendente" />
+            </h:selectOneMenu>
+        </h:panelGrid>
+
+        <h:commandButton value="Buscar Tarefas" action="#{tarefaBean.buscarTarefas}" />
+
+        <br /><br />
+
+        <!-- Tabela de Tarefas -->
+        <h:dataTable value="#{tarefaBean.tarefas}" var="tarefa" border="1">
+            <h:column>
+                <f:facet name="header">Número</f:facet>
+                #{tarefa.numero}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Título</f:facet>
+                #{tarefa.titulo}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Responsável</f:facet>
+                #{tarefa.responsavel.nome}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Ações</f:facet>
+                <h:commandButton value="Editar" action="#{tarefaBean.editar(tarefa.numero)}" />
+                <h:commandButton value="Excluir" action="#{tarefaBean.excluir(tarefa.numero)}" 
+                                 onclick="return confirm('Tem certeza que deseja excluir?');"/>
+            </h:column>
+        </h:dataTable>
+
+    </h:form>
+</h:body>
+</html>

@@ -1,0 +1,20 @@
+/target/
+/bin/
+/out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+/.mvn/
+/target/
+Thumbs.db      
+
+#variaveis de ambiente
+src/main/resources/application.properties             
+
+.idea
+*.iws
+*.iml
+*.ipr
