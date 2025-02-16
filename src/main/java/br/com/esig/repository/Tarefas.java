@@ -42,18 +42,9 @@ public class Tarefas implements Serializable {
         tarefa = porNumero(tarefa.getNumero());
         manager.remove(tarefa);
     }
-
-    public List<String> listarResponsaveis() {
-        TypedQuery<String> query = manager.createQuery(
-            "SELECT DISTINCT t.responsavel FROM Tarefa t", String.class);
-        return query.getResultList();
-    }
-
-    public List<Tarefa> buscarPorResponsavel(String responsavel) {
-        TypedQuery<Tarefa> query = manager.createQuery(
-            "SELECT t FROM Tarefa t WHERE t.responsavel = :responsavel", Tarefa.class);
-        query.setParameter("responsavel", responsavel);
-        return query.getResultList();
+    
+    public List<Tarefa> todas() {
+        return manager.createQuery("FROM Tarefa", Tarefa.class).getResultList();
     }
 
     public EntityManager getManager() {

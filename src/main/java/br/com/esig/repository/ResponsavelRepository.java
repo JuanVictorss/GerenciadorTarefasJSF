@@ -15,7 +15,7 @@ public class ResponsavelRepository {
 
     public List<Responsavel> listarResponsaveis() {
         TypedQuery<Responsavel> query = manager.createQuery(
-            "SELECT r FROM Responsavel r", Responsavel.class);  // Alterado para retornar objetos Responsavel
+            "SELECT r FROM Responsavel r", Responsavel.class); 
         return query.getResultList();
     }
 }

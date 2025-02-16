@@ -58,6 +58,6 @@ public class Responsavel implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Tarefa responsavel=" + responsavel;
+		return responsavel;
 	}
 }
