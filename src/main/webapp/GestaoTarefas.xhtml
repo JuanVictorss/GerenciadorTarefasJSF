@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="WEB-INF/template/Layout.xhtml">
+
+	<ui:define name="titulo">
+	Cadastro de Tarefas
+</ui:define>
+
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:viewAction action="#{tarefasBean.todasTarefas}" />
+		</f:metadata>
+
+		<h:form id="frm">
+			<p:messages id="messages" />
+
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<p:inputText id="termoPesquisa"
+						placeholder="Digite aqui um termo para pesquisa..." size="30"
+						value="#{tarefasBean.termoPesquisa}" />
+
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						actionListener="#{tarefasBean.pesquisar}"
+						update="tarefasDataTable messages" process="@this termoPesquisa" />
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+					<p:commandButton value="Nova" icon="fa fa-plus"
+						actionListener="#{tarefasBean.prepararNovaTarefa}"
+						oncomplete="PF('tarefaDialogWidgetVar').show()"
+						update="tarefaDialog" process="@this">
+						<p:resetInput target="tarefaDialog" />
+					</p:commandButton>
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+					<p:commandButton title="Editar"
+						disabled="#{not tarefasBean.tarefaSeleciona}"
+						actionListener="#{tarefasBean.prepararEdicao}"
+									 oncomplete="PF('tarefaDialogWidgetVar').show()"
+									 update="@form" process="@this">
+						<p:resetInput target="tarefaDialog" />
+					</p:commandButton>
+
+					<p:commandButton title="Excluir"
+						disabled="#{not tarefasBean.tarefaSeleciona}"
+						actionListener="#{tarefasBean.excluir}"
+						update="messages tarefasDataTable toolbar" process="@this">
+						<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+							message="Posso excluir a tarefa?" />
+					</p:commandButton>
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+				</f:facet>
+			</p:toolbar>
+
+			<p:spacer height="20px" />
+
+			<p:dataTable id="tarefasDataTable"
+				value="#{tarefasBean.listaTarefas}" var="tarefa"
+				emptyMessage="Nenhuma informação a ser exibida" paginator="true"
+				rows="10" paginatorPosition="bottom" selectionMode="single"
+				selection="#{tarefasBean.tarefa}" rowKey="#{tarefa.id}">
+
+				<p:ajax event="rowSelect" update="frm:toolbar" />
+
+				<p:ajax event="rowUnselect" update="frm:toolbar" />
+
+				<p:column headerText="Numero" sortBy="#{tarefa.id}">
+					<h:outputText value="#{tarefa.id}" />
+				</p:column>
+
+				<p:column headerText="Titulo">
+					<h:outputText value="#{tarefa.titulo}" />
+				</p:column>
+
+				<p:column headerText="Responsavel">
+					<h:outputText value="#{tarefa.responsavel}" />
+				</p:column>
+
+
+
+			</p:dataTable>
+
+			<p:dialog id="tarefaDialog" header="Tarefa"
+				widgetVar="tarefaDialogWidgetVar" modal="true" resizable="false"
+				closeOnEscape="true">
+				<p:messages id="tarefaMessages" />
+
+				<p:defaultCommand target="salvarCommandButton" scope="tarefaDialog" />
+
+				<h:panelGrid id="tarefaPanelGrid" columns="2"
+					rendered="#{tarefasBean.tarefa ne null}">
+					<p:outputLabel value="Titulo: " for="titulo" />
+					<p:inputText id="titulo" size="80" maxlength="120"
+						value="#{tarefasBean.tarefa.titulo}" />
+
+					<p:outputLabel value="Descrição: " for="descricao" />
+					<p:inputText id="descricao" size="80" maxlength="80"
+						value="#{tarefasBean.tarefa.descricao}" />
+
+
+					<p:outputLabel value="Responsável: " for="responsavel" />
+					<h:selectOneMenu id="responsavel"
+						value="#{tarefasBean.idResponsavel}">
+						<f:selectItem itemValue="0" itemLabel="-- SELECIONE --" />
+						<f:selectItems value="#{responsavelBean.comboResponsavel}" />
+					</h:selectOneMenu>
+
+
+
+					<p:outputLabel value="Prioridade: " for="prioridade" />
+					<p:selectOneMenu id="prioridade"
+						value="#{tarefasBean.tarefa.prioridade}">
+						<f:selectItem itemLabel="Selecione..." />
+						<f:selectItems value="#{tarefasBean.tiposTarefa}" var="tipoTarefa"
+							itemLabel="#{tipoTarefa.descricao}" itemValue="#{tipoTarefa}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Deadline: " for="deadline" />
+					<p:calendar id="deadline" pattern="dd/MM/yyyy" size="30"
+						value="#{tarefasBean.tarefa.dataLimite}" />
+
+					<p:commandButton id="salvarCommandButton" value="Salvar"
+						actionListener="#{tarefasBean.salvar}"
+						update="tarefaPanelGrid tarefaMessages"
+						oncomplete="if (!args.validationFailed) PF('tarefaDialogWidgetVar').hide()"
+						process="tarefaDialog" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
