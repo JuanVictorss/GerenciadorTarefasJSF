@@ -1,7 +1,7 @@
 package br.com.esig.controller;
 
 import br.com.esig.model.Responsavel;
-import br.com.esig.repository.ResponsaveisRepository;
+
 import br.com.esig.repository.ResponsavelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 

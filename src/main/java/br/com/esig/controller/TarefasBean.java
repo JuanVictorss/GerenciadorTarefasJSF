@@ -2,7 +2,6 @@ package br.com.esig.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -18,9 +17,6 @@ import br.com.esig.model.Tarefa;
 import br.com.esig.repository.ResponsavelRepository;
 import br.com.esig.repository.TarefaRepository;
 
-import br.com.esig.service.TarefaService;
-import br.com.esig.util.FacesMessages;
-import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -35,8 +31,7 @@ public class TarefasBean implements Serializable {
 
     @Autowired
     private ResponsavelRepository responsavelRepository;
-    @Autowired
-    private TarefaService tarefaService;
+
 
     private List<Tarefa> listaTarefas;
 
@@ -83,14 +78,6 @@ public class TarefasBean implements Serializable {
     public void todasTarefas() {
     	listaTarefas = tarefaRepository.findAll();
     }
-    
-    public void carregarResponsaveis(){
-    	listaResponsaveis = responsavelRepository.findAll();
-    }
-    
-    public List<Responsavel> getResponsaveis(){
-    	return listaResponsaveis;
-    }
 
 
     private void atualizarRegistros() throws IOException {
@@ -121,10 +108,6 @@ public class TarefasBean implements Serializable {
     
     public Prioridade[] getTiposTarefa() {
         return Prioridade.values();
-    }
-    
-    public Converter getResponsaveisConverter() {
-        return responsavelConverter;
     }
     
     public Tarefa getTarefa() {
